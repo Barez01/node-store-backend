@@ -1,4 +1,4 @@
-const ordersSchema = `
+const orderSchema = `
 CREATE TABLE orders (
   id SERIAL PRIMARY KEY,
   user_id INTEGER REFERENCES users(id),
@@ -8,7 +8,7 @@ CREATE TABLE orders (
 );
 `;
 
-const orderItemsSchema = `
+const orderItemSchema = `
 CREATE TABLE order_items (
   id SERIAL PRIMARY KEY,
   order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
@@ -20,6 +20,6 @@ CREATE TABLE order_items (
 `;
 
 module.exports = {
-    ordersSchema,
-    orderItemsSchema,
+  ordersSchema,
+  orderItemsSchema,
 };

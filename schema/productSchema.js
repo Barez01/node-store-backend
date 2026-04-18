@@ -1,4 +1,4 @@
-const productsSchema = `
+const productSchema = `
 CREATE TABLE products (
   id SERIAL PRIMARY KEY,
   name VARCHAR(150) NOT NULL,
@@ -12,4 +12,4 @@ CREATE TABLE products (
 );
 `;
 
-module.exports = productsSchema;
+module.exports = productSchema;

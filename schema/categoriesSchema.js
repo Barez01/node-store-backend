@@ -1,4 +1,4 @@
-const categoriesSchema = `
+const categorySchema = `
 CREATE TABLE categories (
   id SERIAL PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
@@ -7,4 +7,4 @@ CREATE TABLE categories (
 );
 `;
 
-module.exports = categoriesSchema;
+module.exports = categorySchema;
