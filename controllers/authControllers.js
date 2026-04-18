@@ -11,7 +11,7 @@ const generateAccessToken = (id) => {
 const register = async (req, res) => {
   try {
     await createTable(userSchema);
-    const { username, name, password } = req.body;
+    const { username, password } = req.body;
 
     const { v4: uuidv4 } = await import('uuid');
     const id = uuidv4();
@@ -36,14 +36,12 @@ const register = async (req, res) => {
       {
         id: id,
       username: username,
-      name: name,
       password: hashedPassword,
     });
 
     return res.status(200).json({
       id: id,
       username: username,
-      name: name,
       access_token: generateAccessToken(id),
     });
 
@@ -60,21 +58,23 @@ const login = async (req, res) => {
 
     const existingUser = await checkRecords("users", "WHERE username = ?", [username]);
 
-    if (!existingUser) {
+    if (!existingUser || existingUser.length === 0) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const isMatch = await bcrypt.compare(password, existingUser.password);
+    const user = existingUser[0];
+
+    const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
     return res.status(200).json({
-      id: existingUser.id,
-      name: existingUser.name,
-      username: existingUser.username,
-      access_token: generateAccessToken(existingUser.id),
+      id: user.id,
+      name: user.name,
+      username: user.username,
+      access_token: generateAccessToken(user.id),
     });
 
   } catch (error) {

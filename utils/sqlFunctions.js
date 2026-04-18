@@ -22,26 +22,12 @@ const checkRecords = (tableName, where = "", values = []) => {
       if (err) {
         reject(err);
       } else {
-        resolve(results.length ? results[0] : null);
+        resolve(results.length ? results : null);
       }
     });
   });
 };
-
-const returnRecords = (table, where = "", values = []) => {
-    const query = `SELECT * FROM ${table} ${where}`;
-
-    return new Promise((resolve, reject) => {
-        pool.query(query, values, (error, result) => {
-            if(error){
-                reject(error);
-            }else{
-                resolve(result.length ? result : null);
-            }
-        });
-    });
-};
-
+// CREATE
 const insertRecord = (tableName, record) => {
     const query = `INSERT INTO ${tableName} SET ?`;
   return new Promise((resolve, reject) => {
@@ -55,7 +41,21 @@ const insertRecord = (tableName, record) => {
     });
   });
 };
+// READ
+const returnRecords = (table, where = "", values = []) => {
+    const query = `SELECT * FROM ${table} ${where}`;
 
+    return new Promise((resolve, reject) => {
+        pool.query(query, values, (error, result) => {
+            if(error){
+                reject(error);
+            }else{
+                resolve(result.length ? result : null);
+            }
+        });
+    });
+};
+// UPDATE
 const updateRecord = (tableName, record, where = "", values = []) => {
     const query = `UPDATE ${tableName} SET ? ${where}`;
   return new Promise((resolve, reject) => {
@@ -69,7 +69,7 @@ const updateRecord = (tableName, record, where = "", values = []) => {
     });
   });
 };
-
+// DELETE
 const deleteRecord = (tableName, where = "", values = []) => {
     const query = `DELETE FROM ${tableName} ${where}`;
   return new Promise((resolve, reject) => {
