@@ -18,12 +18,6 @@ const getCategories = async (req, res) => {
       return res.status(401).json({ error: requester.error });
     }
 
-    const role = await checkRole(requester.id);
-
-    if (!role.success) {
-      return res.status(401).json({ error: role.error });
-    }
-
     await createTable(taskSchema);
 
     const tasks = await returnRecords("categories");
@@ -33,26 +27,30 @@ const getCategories = async (req, res) => {
   }
 };
 
-const addTask = async (req, res) => {
+const addCategory = async (req, res) => {
   try {
     const accessToken = req.headers.authorization;
-    const user = await verifyUserToken(accessToken);
+    const requester = await verifyUserToken(accessToken);
 
-    if (!user.success) {
-      return res.status(401).json({ error: user.error });
+    if (!requester.success) {
+      return res.status(401).json({ error: requester.error });
     }
 
-    const userId = user.id;
-    const { title, description } = req.body;
+    const role = await checkRole(requester.id);
+
+    if (!role.success) {
+      return res.status(401).json({ error: role.error });
+    }
+
+    const { name, description } = req.body;
 
     await createTable(taskSchema);
 
-    const tasks = await insertRecord("tasks", {
-      userId: userId,
-      title: title,
+    const tasks = await insertRecord("categories", {
+      name: name,
       description: description,
     });
-    return res.status(200).json({ message: "Task added" });
+    return res.status(200).json({ message: "Category added" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
