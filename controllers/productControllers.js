@@ -102,6 +102,53 @@ const updateProduct = async (req, res) => {
   }
 };
 
+const updateStock = async (req, res) => {
+  try {
+    const accessToken = req.headers.authorization;
+    const requester = await verifyUserToken(accessToken);
+
+    if (!requester.success) {
+      return res.status(401).json({ error: requester.error });
+    }
+
+    const role = await checkRole(requester.id);
+
+    if (!role.success) {
+      return res.status(401).json({ error: role.error });
+    }
+
+    const { id, newStock, isSale } = req.body;
+
+    const existingProduct = await returnRecords(
+      "products",
+      "WHERE id = ?",
+      [id]
+    );
+
+    if (!existingProduct || existingProduct.length === 0) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    const currentStock = existingProduct[0].stock;
+
+    const stock = isSale ? (currentStock - newStock) : (currentStock + newStock);
+
+    await createTable(productSchema);
+
+    await updateRecord(
+      "products",
+      {
+      stock: stock,
+    },
+      `WHERE id = ?`,
+      [id],
+    );
+    return res.status(200).json({ message: "Stock updated" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 const deleteProduct = async (req, res) => {
   try {
     const accessToken = req.headers.authorization;
@@ -132,5 +179,6 @@ module.exports = {
   getProducts,
   addProduct,
   updateProduct,
-  deleteProduct,
+  updateStock,
+  deleteProduct
 };
