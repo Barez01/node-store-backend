@@ -20,8 +20,10 @@ const getCategories = async (req, res) => {
 
     await createTable(categorySchema);
 
-    const tasks = await returnRecords("categories");
-    return res.status(200).json({ tasks: tasks != null ? tasks : [] });
+    const categories = await returnRecords("categories");
+    return res
+      .status(200)
+      .json({ categories: categories != null ? categories : [] });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -46,7 +48,7 @@ const addCategory = async (req, res) => {
 
     await createTable(categorySchema);
 
-    const tasks = await insertRecord("categories", {
+    await insertRecord("categories", {
       name: name,
       description: description,
     });
@@ -75,7 +77,7 @@ const updateCategory = async (req, res) => {
 
     await createTable(categorySchema);
 
-    const tasks = await updateRecord(
+    await updateRecord(
       "categories",
       {
         name: name,
@@ -109,7 +111,7 @@ const deleteCategory = async (req, res) => {
 
     await createTable(categorySchema);
 
-    const tasks = await deleteRecord("categories", `WHERE id = ?`, [id]);
+    await deleteRecord("categories", `WHERE id = ?`, [id]);
     return res.status(200).json({ message: "Category deleted" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
