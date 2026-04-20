@@ -8,6 +8,7 @@ const {
 } = require("../utils/sqlFunctions");
 const verifyToken = require("../utils/verifyUserToken");
 const bcrypt = require("bcrypt");
+const checkRole = require("../utils/checkRole");
 
 const generateAccessToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -96,21 +97,7 @@ const updatePassword = async (req, res) => {
       return res.status(401).json({ error: requesterId.error });
     }
 
-    const requester = await checkRecords("users", "WHERE id = ?", [
-      requesterId,
-    ]);
-
-    if (!requester || requester.length === 0) {
-      return res.status(401).json({ message: "You are not permitted as a valid user" });
-    }
-
-    const requesterUser = requester[0];
-
-    if (requesterUser.role !== "admin") {
-      return res.status(403).json({
-        message: "Only admins can change passwords",
-      });
-    }
+    await checkRole(requesterId);
 
     const { userId, newPassword } = req.body;
 
