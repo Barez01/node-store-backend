@@ -8,6 +8,7 @@ const {
 const taskSchema = require("../schema/taskSchema");
 const verifyUserToken = require("../utils/verifyUserToken");
 const checkRole = require("../utils/checkRole");
+const categorySchema = require("../schema/categorySchema");
 
 const getCategories = async (req, res) => {
   try {
@@ -56,29 +57,35 @@ const addCategory = async (req, res) => {
   }
 };
 
-const updateTask = async (req, res) => {
+const updateCategory = async (req, res) => {
   try {
     const accessToken = req.headers.authorization;
-    const user = await verifyUserToken(accessToken);
+    const requester = await verifyUserToken(accessToken);
 
-    if (!user.success) {
-      return res.status(401).json({ error: user.error });
+    if (!requester.success) {
+      return res.status(401).json({ error: requester.error });
     }
 
-    const { id, title, description } = req.body;
+    const role = await checkRole(requester.id);
 
-    await createTable(taskSchema);
+    if (!role.success) {
+      return res.status(401).json({ error: role.error });
+    }
+
+    const { id, name, description } = req.body;
+
+    await createTable(categorySchema);
 
     const tasks = await updateRecord(
-      "tasks",
+      "categories",
       {
-        title: title,
+        name: name,
         description: description,
       },
       `WHERE id = ?`,
       [id],
     );
-    return res.status(200).json({ message: "Task updated" });
+    return res.status(200).json({ message: "Category updated" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
