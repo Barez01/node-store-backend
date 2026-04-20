@@ -16,7 +16,7 @@ const checkRole = (requesterId) => {
         return {success: false, error: "Only admins are permitted for this action"};
     }
 
-    return {success: true, admin: true};
+    return {success: true, role: requesterUser.role};
 
     }catch(error){
         return {success: false, error: "You are not permitted as a valid user"};

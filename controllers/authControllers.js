@@ -91,13 +91,17 @@ const updatePassword = async (req, res) => {
     await createTable(userSchema);
 
     const accessToken = req.headers.authorization;
-    const requesterId = await verifyToken(accessToken);
+    const requester = await verifyToken(accessToken);
 
-    if (!requesterId.success) {
-      return res.status(401).json({ error: requesterId.error });
+    if (!requester.success) {
+      return res.status(401).json({ error: requester.error });
     }
 
-    await checkRole(requesterId);
+    const role = await checkRole(requester.id);
+
+    if (!role.success) {
+      return res.status(401).json({ error: role.error });
+    }
 
     const { userId, newPassword } = req.body;
 
