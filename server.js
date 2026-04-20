@@ -7,12 +7,14 @@ const connectDB = require("./db/db");
 const port = process.env.PORT;
 const authRoutes = require("./routes/authRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
+const productRoutes = require("./routes/productRoutes");
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/", authRoutes);
 app.use("/", categoryRoutes);
+app.use("/", productRoutes);
 
 connectDB();
 
