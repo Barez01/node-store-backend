@@ -63,7 +63,7 @@ const addProduct = async (req, res) => {
   }
 };
 
-const updateCategory = async (req, res) => {
+const updateProduct = async (req, res) => {
   try {
     const accessToken = req.headers.authorization;
     const requester = await verifyUserToken(accessToken);
@@ -102,7 +102,7 @@ const updateCategory = async (req, res) => {
   }
 };
 
-const deleteCategory = async (req, res) => {
+const deleteProduct = async (req, res) => {
   try {
     const accessToken = req.headers.authorization;
     const requester = await verifyUserToken(accessToken);
@@ -122,15 +122,15 @@ const deleteCategory = async (req, res) => {
     await createTable(productSchema);
 
     await deleteRecord("products", `WHERE id = ?`, [id]);
-    return res.status(200).json({ message: "Category deleted" });
+    return res.status(200).json({ message: "Product deleted" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
 
 module.exports = {
-  getCategories,
-  addCategory,
-  updateCategory,
-  deleteCategory,
+  getProducts,
+  addProduct,
+  updateProduct,
+  deleteProduct,
 };
