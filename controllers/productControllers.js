@@ -29,7 +29,7 @@ const getProducts = async (req, res) => {
   }
 };
 
-const addCategory = async (req, res) => {
+const addProduct = async (req, res) => {
   try {
     const accessToken = req.headers.authorization;
     const requester = await verifyUserToken(accessToken);
@@ -44,15 +44,24 @@ const addCategory = async (req, res) => {
       return res.status(401).json({ error: role.error });
     }
 
-    const { name, description } = req.body;
+    const { name, price, cost_price, stock, unit_type, min_stock_alert, category_id } = req.body;
 
     await createTable(productSchema);
 
     await insertRecord("products", {
       name: name,
-      description: description,
+      price: price,
+      cost_price: cost_price,
+      stock: stock,
+      unit_type: unit_type,
+      min_stock_alert: min_stock_alert,
+      category_id: category_id,
+      price: description,
+      price: description,
+      price: description,
+      price: description,
     });
-    return res.status(200).json({ message: "Category added" });
+    return res.status(200).json({ message: "Product added" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
