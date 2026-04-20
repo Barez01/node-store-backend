@@ -5,7 +5,6 @@ const {
   updateRecord,
   deleteRecord,
 } = require("../utils/sqlFunctions");
-const taskSchema = require("../schema/taskSchema");
 const verifyUserToken = require("../utils/verifyUserToken");
 const checkRole = require("../utils/checkRole");
 const categorySchema = require("../schema/categorySchema");
@@ -19,7 +18,7 @@ const getCategories = async (req, res) => {
       return res.status(401).json({ error: requester.error });
     }
 
-    await createTable(taskSchema);
+    await createTable(categorySchema);
 
     const tasks = await returnRecords("categories");
     return res.status(200).json({ tasks: tasks != null ? tasks : [] });
@@ -45,7 +44,7 @@ const addCategory = async (req, res) => {
 
     const { name, description } = req.body;
 
-    await createTable(taskSchema);
+    await createTable(categorySchema);
 
     const tasks = await insertRecord("categories", {
       name: name,
@@ -91,29 +90,35 @@ const updateCategory = async (req, res) => {
   }
 };
 
-const deleteTask = async (req, res) => {
+const deleteCategory = async (req, res) => {
   try {
     const accessToken = req.headers.authorization;
-    const user = await verifyUserToken(accessToken);
+    const requester = await verifyUserToken(accessToken);
 
-    if (!user.success) {
-      return res.status(401).json({ error: user.error });
+    if (!requester.success) {
+      return res.status(401).json({ error: requester.error });
+    }
+
+    const role = await checkRole(requester.id);
+
+    if (!role.success) {
+      return res.status(401).json({ error: role.error });
     }
 
     const { id } = req.body;
 
-    await createTable(taskSchema);
+    await createTable(categorySchema);
 
-    const tasks = await deleteRecord("tasks", `WHERE id = ?`, [id]);
-    return res.status(200).json({ message: "Task deleted" });
+    const tasks = await deleteRecord("categories", `WHERE id = ?`, [id]);
+    return res.status(200).json({ message: "Category deleted" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
 
 module.exports = {
-  getTasks,
-  addTask,
-  updateTask,
-  deleteTask,
+  getCategories,
+  addCategory,
+  updateCategory,
+  deleteCategory,
 };
