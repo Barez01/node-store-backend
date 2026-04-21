@@ -35,6 +35,34 @@ const getOrders = async (req, res) => {
   }
 };
 
+const getOrderItems = async (req, res) => {
+  try {
+    const accessToken = req.headers.authorization;
+    const requester = await verifyUserToken(accessToken);
+
+    if (!requester.success) {
+      return res.status(401).json({ error: requester.error });
+    }
+
+    const role = await checkRole(requester.id);
+
+    if (!role.success) {
+      return res.status(401).json({ error: role.error });
+    }
+
+    await createTable(categorySchema);
+
+    const orderId = req.orderId;
+
+    const orderItems = await returnRecords("order_items", "WHERE order_id = ?", [orderId]);
+    return res
+      .status(200)
+      .json({ orderItems: orderItems != null ? orderItems : [] });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 const addCategory = async (req, res) => {
   try {
     const accessToken = req.headers.authorization;
