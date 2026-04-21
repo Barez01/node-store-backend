@@ -7,7 +7,7 @@ const {
 } = require("../utils/sqlFunctions");
 const verifyUserToken = require("../utils/verifyUserToken");
 const checkRole = require("../utils/checkRole");
-const categorySchema = require("../schema/categorySchema");
+const {orderSchema, orderItemSchema} = require("../schema/salesSchema");
 
 const getOrders = async (req, res) => {
   try {
@@ -24,7 +24,7 @@ const getOrders = async (req, res) => {
       return res.status(401).json({ error: role.error });
     }
 
-    await createTable(categorySchema);
+    await createTable(orderSchema);
 
     const orders = await returnRecords("orders");
     return res
@@ -50,7 +50,7 @@ const getOrderItems = async (req, res) => {
       return res.status(401).json({ error: role.error });
     }
 
-    await createTable(categorySchema);
+    await createTable(orderItemSchema);
 
     const orderId = req.orderId;
 
@@ -63,7 +63,7 @@ const getOrderItems = async (req, res) => {
   }
 };
 
-const addCategory = async (req, res) => {
+const addOrder = async (req, res) => {
   try {
     const accessToken = req.headers.authorization;
     const requester = await verifyUserToken(accessToken);
@@ -72,81 +72,73 @@ const addCategory = async (req, res) => {
       return res.status(401).json({ error: requester.error });
     }
 
-    const role = await checkRole(requester.id);
+    const { paymentMethod, items } = req.body;
 
-    if (!role.success) {
-      return res.status(401).json({ error: role.error });
+    if (!items || items.length === 0) {
+      return res.status(400).json({ message: "No items provided" });
     }
 
-    const { name, description } = req.body;
+    await createTable(orderSchema);
+    await createTable(orderItemSchema);
 
-    await createTable(categorySchema);
+    let totalPrice = 0;
 
-    await insertRecord("categories", {
-      name: name,
-      description: description,
+    for (const item of items) {
+      totalPrice += item.quantity * item.price;
+    }
+
+    const orderResult = await insertRecord("orders", {
+      user_id: requester.id,
+      total_price: totalPrice,
+      payment_method: paymentMethod,
     });
-    return res.status(200).json({ message: "Category added" });
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-};
 
-const updateCategory = async (req, res) => {
-  try {
-    const accessToken = req.headers.authorization;
-    const requester = await verifyUserToken(accessToken);
+    const orderId = orderResult.insertId; // depends on your SQL util
 
-    if (!requester.success) {
-      return res.status(401).json({ error: requester.error });
+    for (const item of items) {
+      const product = await returnRecords(
+        "products",
+        "WHERE id = ?",
+        [item.productId]
+      );
+
+      if (!product || product.length === 0) {
+        return res.status(404).json({
+          message: `Product ${item.productId} not found`,
+        });
+      }
+
+      const currentStock = product[0].stock;
+
+      if (currentStock < item.quantity) {
+        return res.status(400).json({
+          message: `Not enough stock for product ${item.productId}`,
+        });
+      }
+
+      await insertRecord("order_items", {
+        order_id: orderId,
+        product_id: item.productId,
+        quantity: item.quantity,
+        price_at_sale: item.price,
+        unit_type: item.unitType,
+      });
+
+      await updateRecord(
+        "products",
+        {
+          stock: currentStock - item.quantity,
+        },
+        "WHERE id = ?",
+        [item.productId]
+      );
     }
 
-    const role = await checkRole(requester.id);
+    return res.status(200).json({
+      message: "Order created successfully",
+      orderId,
+    });
 
-    if (!role.success) {
-      return res.status(401).json({ error: role.error });
-    }
-
-    const { id, name, description } = req.body;
-
-    await createTable(categorySchema);
-
-    await updateRecord(
-      "categories",
-      {
-        name: name,
-        description: description,
-      },
-      `WHERE id = ?`,
-      [id],
-    );
-    return res.status(200).json({ message: "Category updated" });
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-};
-
-const deleteCategory = async (req, res) => {
-  try {
-    const accessToken = req.headers.authorization;
-    const requester = await verifyUserToken(accessToken);
-
-    if (!requester.success) {
-      return res.status(401).json({ error: requester.error });
-    }
-
-    const role = await checkRole(requester.id);
-
-    if (!role.success) {
-      return res.status(401).json({ error: role.error });
-    }
-
-    const { id } = req.body;
-
-    await createTable(categorySchema);
-
-    await deleteRecord("categories", `WHERE id = ?`, [id]);
-    return res.status(200).json({ message: "Category deleted" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
