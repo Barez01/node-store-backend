@@ -8,6 +8,7 @@ const port = process.env.PORT;
 const authRoutes = require("./routes/authRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const productRoutes = require("./routes/productRoutes");
+const salesRoutes = require("./routes/salesRoutes");
 
 app.use(cors());
 app.use(express.json());
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/", authRoutes);
 app.use("/", categoryRoutes);
 app.use("/", productRoutes);
+app.use("/", salesRoutes);
 
 connectDB();
 
