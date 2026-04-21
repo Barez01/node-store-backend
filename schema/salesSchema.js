@@ -20,6 +20,6 @@ CREATE TABLE order_items (
 `;
 
 module.exports = {
-  ordersSchema,
-  orderItemsSchema,
+  orderSchema,
+  orderItemSchema,
 };
