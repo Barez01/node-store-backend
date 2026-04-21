@@ -7,7 +7,7 @@ const {
 } = require("../utils/sqlFunctions");
 const verifyUserToken = require("../utils/verifyUserToken");
 const checkRole = require("../utils/checkRole");
-const {orderSchema, orderItemSchema} = require("../schema/salesSchema");
+const { orderSchema, orderItemSchema } = require("../schema/salesSchema");
 
 const getOrders = async (req, res) => {
   try {
@@ -27,9 +27,7 @@ const getOrders = async (req, res) => {
     await createTable(orderSchema);
 
     const orders = await returnRecords("orders");
-    return res
-      .status(200)
-      .json({ orders: orders != null ? orders : [] });
+    return res.status(200).json({ orders: orders != null ? orders : [] });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -54,7 +52,11 @@ const getOrderItems = async (req, res) => {
 
     const orderId = req.orderId;
 
-    const orderItems = await returnRecords("order_items", "WHERE order_id = ?", [orderId]);
+    const orderItems = await returnRecords(
+      "order_items",
+      "WHERE order_id = ?",
+      [orderId],
+    );
     return res
       .status(200)
       .json({ orderItems: orderItems != null ? orderItems : [] });
@@ -93,14 +95,12 @@ const addOrder = async (req, res) => {
       payment_method: paymentMethod,
     });
 
-    const orderId = orderResult.insertId; // depends on your SQL util
+    const orderId = orderResult.insertId; // CHECK THIS IN CASE OF ERROR!
 
     for (const item of items) {
-      const product = await returnRecords(
-        "products",
-        "WHERE id = ?",
-        [item.productId]
-      );
+      const product = await returnRecords("products", "WHERE id = ?", [
+        item.productId,
+      ]);
 
       if (!product || product.length === 0) {
         return res.status(404).json({
@@ -130,7 +130,7 @@ const addOrder = async (req, res) => {
           stock: currentStock - item.quantity,
         },
         "WHERE id = ?",
-        [item.productId]
+        [item.productId],
       );
     }
 
@@ -138,15 +138,13 @@ const addOrder = async (req, res) => {
       message: "Order created successfully",
       orderId,
     });
-
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
 
 module.exports = {
-  getCategories,
-  addCategory,
-  updateCategory,
-  deleteCategory,
+  getOrders,
+  getOrderItems,
+  addOrder,
 };
