@@ -9,6 +9,7 @@ const authRoutes = require("./routes/authRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const productRoutes = require("./routes/productRoutes");
 const salesRoutes = require("./routes/salesRoutes");
+const overviewRoutes = require("./routes/overviewRoutes");
 
 app.use(cors());
 app.use(express.json());
@@ -17,6 +18,7 @@ app.use("/", authRoutes);
 app.use("/", categoryRoutes);
 app.use("/", productRoutes);
 app.use("/", salesRoutes);
+app.use("/", overviewRoutes);
 
 connectDB();
 
