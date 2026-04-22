@@ -15,9 +15,8 @@ const createTable = (schema) => {
 };
 
 const checkRecords = (tableName, where = "", values = []) => {
-    const query = `SELECT * FROM ${tableName} ${where}`;
+  const query = `SELECT * FROM ${tableName} ${where}`;
   return new Promise((resolve, reject) => {
-
     pool.query(query, values, (err, results) => {
       if (err) {
         reject(err);
@@ -29,9 +28,8 @@ const checkRecords = (tableName, where = "", values = []) => {
 };
 // CREATE
 const insertRecord = (tableName, record) => {
-    const query = `INSERT INTO ${tableName} SET ?`;
+  const query = `INSERT INTO ${tableName} SET ?`;
   return new Promise((resolve, reject) => {
-
     pool.query(query, [record], (err, results) => {
       if (err) {
         reject(err);
@@ -43,23 +41,42 @@ const insertRecord = (tableName, record) => {
 };
 // READ
 const returnRecords = (table, where = "", values = []) => {
-    const query = `SELECT * FROM ${table} ${where}`;
+  const query = `SELECT * FROM ${table} ${where}`;
 
-    return new Promise((resolve, reject) => {
-        pool.query(query, values, (error, result) => {
-            if(error){
-                reject(error);
-            }else{
-                resolve(result.length ? result : null);
-            }
-        });
+  return new Promise((resolve, reject) => {
+    pool.query(query, values, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(result.length ? result : null);
+      }
     });
+  });
+};
+
+const returnCustomRecords = (select, table = "", where = "", values = []) => {
+  let query;
+
+  if (!table) {
+    query = select;
+  } else {
+    query = `${select} FROM ${table} ${where}`;
+  }
+
+  return new Promise((resolve, reject) => {
+    pool.query(query, values, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(result?.length ? result : []);
+      }
+    });
+  });
 };
 // UPDATE
 const updateRecord = (tableName, record, where = "", values = []) => {
-    const query = `UPDATE ${tableName} SET ? ${where}`;
+  const query = `UPDATE ${tableName} SET ? ${where}`;
   return new Promise((resolve, reject) => {
-
     pool.query(query, [record, values], (err, results) => {
       if (err) {
         reject(err);
@@ -71,9 +88,8 @@ const updateRecord = (tableName, record, where = "", values = []) => {
 };
 // DELETE
 const deleteRecord = (tableName, where = "", values = []) => {
-    const query = `DELETE FROM ${tableName} ${where}`;
+  const query = `DELETE FROM ${tableName} ${where}`;
   return new Promise((resolve, reject) => {
-
     pool.query(query, values, (err, results) => {
       if (err) {
         reject(err);
@@ -85,10 +101,11 @@ const deleteRecord = (tableName, where = "", values = []) => {
 };
 
 module.exports = {
-    createTable,
-    checkRecords,
-    returnRecords,
-    insertRecord,
-    updateRecord,
-    deleteRecord,
+  createTable,
+  checkRecords,
+  returnRecords,
+  returnCustomRecords,
+  insertRecord,
+  updateRecord,
+  deleteRecord,
 };
