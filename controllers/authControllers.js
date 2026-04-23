@@ -17,7 +17,7 @@ const generateAccessToken = (id) => {
 const register = async (req, res) => {
   try {
     await createTable(userSchema);
-    const { username, password } = req.body;
+    const { username, role, password } = req.body;
 
     const { v4: uuidv4 } = await import("uuid");
     const id = uuidv4();
@@ -40,12 +40,14 @@ const register = async (req, res) => {
     await insertRecord("users", {
       id: id,
       username: username,
+      role: role,
       password: hashedPassword,
     });
 
     return res.status(200).json({
       id: id,
       username: username,
+      role: role,
       access_token: generateAccessToken(id),
     });
   } catch (error) {
