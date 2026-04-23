@@ -120,7 +120,7 @@ const addOrder = async (req, res) => {
         order_id: orderId,
         product_id: item.productId,
         quantity: item.quantity,
-        price_at_sale: item.price,
+        price_at_sale: item.priceAtSale,
         unit_type: item.unitType,
       });
 
