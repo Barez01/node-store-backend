@@ -1,6 +1,6 @@
 const { checkRecords } = require("./sqlFunctions");
 
-const checkRole = (requesterId) => {
+const checkRole = async (requesterId) => {
     try{
          const requester = await checkRecords("users", "WHERE id = ?", [
       requesterId,
