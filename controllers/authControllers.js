@@ -80,6 +80,7 @@ const login = async (req, res) => {
     return res.status(200).json({
       id: user.id,
       name: user.name,
+      role: user.role,
       username: user.username,
       access_token: generateAccessToken(user.id),
     });

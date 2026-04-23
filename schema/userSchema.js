@@ -1,6 +1,6 @@
 const userSchema = `
-CREATE TABLE users (
-  id SERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS users (
+  id VARCHAR(255) PRIMARY KEY,
   username VARCHAR(100) UNIQUE NOT NULL,
   password TEXT NOT NULL,
   role VARCHAR(10) CHECK (role IN ('admin', 'cashier')) NOT NULL,

@@ -2,8 +2,8 @@ POST http://localhost:5000/register
 Content-Type: application/json
 
 {
-    "username": "barez01",
-    "name": "Barez Azad",
+    "username": "barez",
+    "role": "admin",
     "password": "123"
 }
 
@@ -13,7 +13,7 @@ POST http://localhost:5000/login
 Content-Type: application/json
 
 {
-    "username": "barez02",
+    "username": "barez",
     "password": "123"
 }
 

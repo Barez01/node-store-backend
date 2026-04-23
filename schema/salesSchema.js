@@ -1,5 +1,5 @@
 const orderSchema = `
-CREATE TABLE orders (
+CREATE TABLE IF NOT EXISTS orders (
   id SERIAL PRIMARY KEY,
   user_id INTEGER REFERENCES users(id),
   total_price DECIMAL(12,2) NOT NULL,
