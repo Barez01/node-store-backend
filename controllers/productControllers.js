@@ -44,18 +44,18 @@ const addProduct = async (req, res) => {
       return res.status(401).json({ error: role.error });
     }
 
-    const { name, price, cost_price, stock, unit_type, min_stock_alert, category_id } = req.body;
+    const { name, price, costPrice, stock, unitType, minStockAlert, categoryId } = req.body;
 
     await createTable(productSchema);
 
     await insertRecord("products", {
       name: name,
       price: price,
-      cost_price: cost_price,
+      cost_price: costPrice,
       stock: stock,
-      unit_type: unit_type,
-      min_stock_alert: min_stock_alert,
-      category_id: category_id,
+      unit_type: unitType,
+      min_stock_alert: minStockAlert,
+      category_id: categoryId,
     });
     return res.status(200).json({ message: "Product added" });
   } catch (error) {
