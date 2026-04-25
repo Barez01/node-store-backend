@@ -78,7 +78,7 @@ const updateProduct = async (req, res) => {
       return res.status(401).json({ error: role.error });
     }
 
-    const { id, name, price, cost_price, stock, unit_type, min_stock_alert, category_id } = req.body;
+    const { id, name, price, costPrice, stock, unitType, minStockAlert, categoryId } = req.body;
 
     await createTable(productSchema);
 
@@ -87,11 +87,11 @@ const updateProduct = async (req, res) => {
       {
       name: name,
       price: price,
-      cost_price: cost_price,
+      cost_price: costPrice,
       stock: stock,
-      unit_type: unit_type,
-      min_stock_alert: min_stock_alert,
-      category_id: category_id,
+      unit_type: unitType,
+      min_stock_alert: minStockAlert,
+      category_id: categoryId,
     },
       `WHERE id = ?`,
       [id],
