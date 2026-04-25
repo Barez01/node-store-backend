@@ -19,38 +19,38 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:5000/tasks
+GET http://localhost:5000/categories
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI0ZThlYTI0LTU4MWItNGU1NS1hZGU5LWMyZWRhY2Y1ZTIyZiIsImlhdCI6MTc3NTY5MjU3NCwiZXhwIjoxNzc2Mjk3Mzc0fQ.i0f7Cala3LH6sDme2FUpUVlw51ETo21xijU3xaEgqnE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM4YzJjZjU1LTA0OWUtNDVjZS05NjE3LWVjNzdjZTZjMzkzOCIsImlhdCI6MTc3NzE1NTM3OCwiZXhwIjoxNzc3NzYwMTc4fQ.526Wi5brZXardRqjOsNNOOnU46JjdJtU1BqipluHsWk
 
 ###
 
-POST http://localhost:5000/tasks
+POST http://localhost:5000/categories
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI0ZThlYTI0LTU4MWItNGU1NS1hZGU5LWMyZWRhY2Y1ZTIyZiIsImlhdCI6MTc3NDk3MTc1NywiZXhwIjoxNzc1NTc2NTU3fQ.27vZC8F7dbFdPhSZ4A8TFtpZb3RqTuChOW8-lLJJmjc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM4YzJjZjU1LTA0OWUtNDVjZS05NjE3LWVjNzdjZTZjMzkzOCIsImlhdCI6MTc3NzE1NTM3OCwiZXhwIjoxNzc3NzYwMTc4fQ.526Wi5brZXardRqjOsNNOOnU46JjdJtU1BqipluHsWk
 
 {
-    "title": "CODING TIME",
-    "description": "Coding usually starts when i get up, and ends when i sleep. With some break abviously."
+    "name": "Groceries",
+    "description": "Groceries are the food and household supplies, ranging from produce and dairy to cleaning items. They represent staple items intended for daily household use. Common examples include bread, milk, vegetables, and canned goods."
 }
 
 ###
 
-PUT http://localhost:5000/tasks
+PUT http://localhost:5000/categories
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI0ZThlYTI0LTU4MWItNGU1NS1hZGU5LWMyZWRhY2Y1ZTIyZiIsImlhdCI6MTc3NDk3MTc1NywiZXhwIjoxNzc1NTc2NTU3fQ.27vZC8F7dbFdPhSZ4A8TFtpZb3RqTuChOW8-lLJJmjc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM4YzJjZjU1LTA0OWUtNDVjZS05NjE3LWVjNzdjZTZjMzkzOCIsImlhdCI6MTc3NzE1NTM3OCwiZXhwIjoxNzc3NzYwMTc4fQ.526Wi5brZXardRqjOsNNOOnU46JjdJtU1BqipluHsWk
 
 {
     "id": "1",
-    "title": "CODING TIME!",
-    "description": "Coding usually starts when i get up, and ends when i sleep. With some break abviously."
+    "name": "Groceries",
+    "description": "Groceries are the food and household supplies intended for daily household use. Common examples include bread, milk, vegetables, and canned goods."
 }
 
 ###
 
-DELETE  http://localhost:5000/tasks
+DELETE  http://localhost:5000/categories
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI0ZThlYTI0LTU4MWItNGU1NS1hZGU5LWMyZWRhY2Y1ZTIyZiIsImlhdCI6MTc3NDk3MTc1NywiZXhwIjoxNzc1NTc2NTU3fQ.27vZC8F7dbFdPhSZ4A8TFtpZb3RqTuChOW8-lLJJmjc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM4YzJjZjU1LTA0OWUtNDVjZS05NjE3LWVjNzdjZTZjMzkzOCIsImlhdCI6MTc3NzE1NTM3OCwiZXhwIjoxNzc3NzYwMTc4fQ.526Wi5brZXardRqjOsNNOOnU46JjdJtU1BqipluHsWk
 
 {
     "id": "1"
