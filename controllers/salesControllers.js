@@ -81,7 +81,7 @@ const addOrder = async (req, res) => {
     }
 
     await createTable(orderSchema);
-    await createTable(orderItemSchema); // TODO: After reinitializing database uncomment this
+    await createTable(orderItemSchema);
 
     let totalPrice = 0;
 
@@ -90,7 +90,7 @@ const addOrder = async (req, res) => {
     }
 
     const orderResult = await insertRecord("orders", {
-      // user_id: requester.id,
+      // user_id: requester.id, // TODO: uncomment this after reinitializing database
       total_price: totalPrice,
       payment_method: paymentMethod,
     });
@@ -120,7 +120,7 @@ const addOrder = async (req, res) => {
         order_id: orderId,
         product_id: item.productId,
         quantity: item.quantity,
-        price_at_sale: item.priceAtSale,
+        price_at_sale: item.price,
         unit_type: item.unitType,
       });
 
