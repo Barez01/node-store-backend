@@ -23,7 +23,7 @@ A High level React & Node JS application built for managing daily tasks. Written
    npm install
 4. **Start the development server**  
    ```sh
-   node server.js
+   node server.js or npm run dev
 4. **Use the web app**  
    ```sh
    get access through: https://github.com/Barez01/react-task-manager.git
