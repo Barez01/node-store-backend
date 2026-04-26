@@ -50,7 +50,7 @@ const getOrderItems = async (req, res) => {
 
     await createTable(orderItemSchema);
 
-    const orderId = req.orderId;
+    const { orderId } = req.body;
 
     const orderItems = await returnRecords(
       "order_items",
@@ -81,7 +81,7 @@ const addOrder = async (req, res) => {
     }
 
     await createTable(orderSchema);
-    await createTable(orderItemSchema);
+    await createTable(orderItemSchema); // TODO: After reinitializing database uncomment this
 
     let totalPrice = 0;
 
@@ -90,12 +90,12 @@ const addOrder = async (req, res) => {
     }
 
     const orderResult = await insertRecord("orders", {
-      user_id: requester.id,
+      // user_id: requester.id,
       total_price: totalPrice,
       payment_method: paymentMethod,
     });
 
-    const orderId = orderResult.insertId; // CHECK THIS IN CASE OF ERROR!
+    const orderId = orderResult.insertId;
 
     for (const item of items) {
       const product = await returnRecords("products", "WHERE id = ?", [

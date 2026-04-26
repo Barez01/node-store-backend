@@ -1,7 +1,7 @@
 const orderSchema = `
 CREATE TABLE IF NOT EXISTS orders (
   id SERIAL PRIMARY KEY,
-  user_id INTEGER REFERENCES users(id),
+  user_id VARCHAR(255) REFERENCES users(id),
   total_price DECIMAL(12,2) NOT NULL,
   payment_method VARCHAR(20) DEFAULT 'cash',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS orders (
 `;
 
 const orderItemSchema = `
-CREATE TABLE order_items (
+CREATE TABLE IF NOT EXISTS order_items (
   id SERIAL PRIMARY KEY,
   order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
   product_id INTEGER REFERENCES products(id),
