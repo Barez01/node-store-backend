@@ -64,6 +64,7 @@ const getOverview = async (req, res) => {
   SELECT 
     p.id,
     p.name,
+    p.unit_type as unit,
     SUM(oi.quantity) as totalSold
   FROM order_items oi
   JOIN products p ON oi.product_id = p.id
