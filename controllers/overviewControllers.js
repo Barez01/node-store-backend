@@ -41,7 +41,7 @@ const getOverview = async (req, res) => {
       "WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) GROUP BY month ORDER BY month ASC",
     );
 
-    const profitTrend = await returnCustomRecords(`
+    const monthlyProfit = await returnCustomRecords(`
   SELECT 
     DATE_FORMAT(o.created_at, '%Y-%m') AS month,
     SUM((oi.price_at_sale - p.cost_price) * oi.quantity) AS profit
@@ -51,6 +51,27 @@ const getOverview = async (req, res) => {
   WHERE o.created_at >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
   GROUP BY month
   ORDER BY month ASC
+`);
+
+    const dailyProfit = await returnCustomRecords(`
+  SELECT 
+    DATE(o.created_at) AS date,
+    SUM(o.total_price) AS total
+  FROM orders o
+  WHERE o.created_at >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+  GROUP BY DATE(o.created_at)
+  ORDER BY date ASC
+`);
+
+    const topCategories = await returnCustomRecords(`
+  SELECT 
+    c.name AS category,
+    SUM(oi.quantity * oi.price_at_sale) AS total
+  FROM order_items oi
+  JOIN products p ON oi.product_id = p.id
+  JOIN categories c ON p.category_id = c.id
+  GROUP BY c.id
+  ORDER BY total DESC
 `);
 
     const todaySalesResult = await returnCustomRecords(
@@ -72,16 +93,17 @@ const getOverview = async (req, res) => {
   ORDER BY totalSold DESC
   LIMIT 5
 `);
-
     return res.status(200).json({
       totalSales,
       totalProducts,
       totalCategories,
       todaySales,
       lowStockProducts: lowStockProducts || [],
-      salesTrend: salesTrend || [],
-      profitTrend: profitTrend || [],
-      topSellingProducts: topProducts || [],
+      // salesTrend: salesTrend || [],
+      monthlyProfit: monthlyProfit || [],
+      dailyProfit: dailyProfit || [],
+      topCategories: topCategories || [],
+      // topSellingProducts: topProducts || [],
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
