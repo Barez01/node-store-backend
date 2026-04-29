@@ -32,7 +32,7 @@ const getOverview = async (req, res) => {
     const lowStockProducts = await returnCustomRecords(
       "SELECT *",
       "products",
-      "WHERE stock <= min_stock_alert",
+      "ORDER BY (stock <= min_stock_alert) DESC, stock ASC",
     );
 
     const salesTrend = await returnCustomRecords(
